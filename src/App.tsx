@@ -166,7 +166,79 @@ function App() {
             </div>
           </div>
         </section>
-        <section id="services" className="h-0" aria-hidden="true" />
+
+        <section id="services" className="bg-neutral-900 py-20">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="mb-12 text-center">
+              <p className="text-xs uppercase tracking-[0.18em] text-amber-400">What You Get</p>
+              <h2 className="mt-3 text-3xl font-semibold text-white md:text-5xl">
+                Three Systems.
+                <br />
+                One Automatic Business.
+              </h2>
+              <p className="mx-auto mt-4 max-w-3xl text-neutral-300">
+                GoAutomatic installs three AI systems into your business. Each one runs on autopilot from day one.
+                Together they save you time, cut your costs, and grow your revenue — every single day.
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              <article className="rounded-xl border border-white/10 bg-neutral-950 p-6">
+                <p className="text-5xl font-semibold text-neutral-700">01</p>
+                <h3 className="mt-4 text-2xl font-semibold text-white">AI Customer Reply System</h3>
+                <p className="mt-3 text-sm leading-6 text-neutral-300">
+                  An AI trained on your business answers every WhatsApp message, Instagram DM, and email —
+                  instantly, correctly, 24/7. Your team stops typing the same replies forever.
+                </p>
+                <ul className="mt-5 space-y-2 text-sm text-neutral-200">
+                  <li>• Answers pricing, location, hours, and product questions automatically</li>
+                  <li>• Replies in your language — English, Swahili, Arabic, French</li>
+                  <li>• Works on WhatsApp, Instagram, Facebook Messenger, Email</li>
+                  <li>• Saves 3–5 hours of staff time every single day</li>
+                  <li>• Escalates complex questions to a real human when needed</li>
+                </ul>
+              </article>
+
+              <article className="rounded-xl border border-amber-700/30 bg-amber-500/10 p-6">
+                <p className="text-5xl font-semibold text-amber-300/60">02</p>
+                <h3 className="mt-4 text-2xl font-semibold text-white">Daily Content Automation</h3>
+                <p className="mt-3 text-sm leading-6 text-neutral-200">
+                  We build an AI content engine that creates and posts fresh content to your Instagram, TikTok,
+                  and Facebook every single day — without you writing, filming, or scheduling anything.
+                </p>
+                <ul className="mt-5 space-y-2 text-sm text-neutral-100">
+                  <li>• 30+ posts per month created and published automatically</li>
+                  <li>• Content is custom-built for your niche and audience</li>
+                  <li>• Captions, hashtags, and posting times optimized by AI</li>
+                  <li>• More daily content = more visibility = more new clients every week</li>
+                  <li>• Works while you sleep, eat, and run your real business</li>
+                </ul>
+              </article>
+
+              <article className="rounded-xl border border-white/10 bg-neutral-950 p-6">
+                <p className="text-5xl font-semibold text-neutral-700">03</p>
+                <h3 className="mt-4 text-2xl font-semibold text-white">Automated Lead Follow-Up</h3>
+                <p className="mt-3 text-sm leading-6 text-neutral-300">
+                  We build a system that detects every new interested lead and automatically follows up within
+                  3 minutes — via WhatsApp or email — before they go cold or sign up with your competitor.
+                </p>
+                <ul className="mt-5 space-y-2 text-sm text-neutral-200">
+                  <li>• Instant follow-up the moment a lead shows interest</li>
+                  <li>• Automated 7-day sequence keeps leads warm automatically</li>
+                  <li>• Recovers leads that would have been lost and forgotten</li>
+                  <li>• Every recovered lead = direct, measurable revenue increase</li>
+                  <li>• You get a clean daily report of every lead that came in</li>
+                </ul>
+              </article>
+            </div>
+
+            <p className="mt-10 rounded-lg border border-white/10 bg-neutral-950 p-4 text-sm text-neutral-300">
+              Optional add-ons (not the main offer): Appointment reminders via WhatsApp · Google Sheets / CRM sync
+              · Multi-branch routing · Bilingual content · AI Voice Notes for WhatsApp
+            </p>
+          </div>
+        </section>
+
         <section id="nextstep" className="h-0" aria-hidden="true" />
         <section id="pricing" className="h-0" aria-hidden="true" />
       </main>
