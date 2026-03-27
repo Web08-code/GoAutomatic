@@ -57,23 +57,23 @@ function LandingPage() {
   const faqs = [
     {
       question: 'How much does this cost?',
-      answer: 'After the free 15-minute call, I give you a clear monthly price based on your business size and what needs automating. Plans start from $99.9 per month. No setup fee. No long contract. Cancel anytime.'
+      answer: 'Pricing is project-based for the initial setup, with a monthly subscription for maintenance, updates, and support. We\'ll provide an exact quote based on the size and complexity of your project.'
     },
     {
       question: 'How long does setup take?',
-      answer: 'Most businesses are fully live within 7 to 10 days. We handle every technical part. You touch nothing.'
+      answer: 'Setup timelines depend on the number and complexity of forms required. Most projects are delivered within a reasonable implementation window, and we confirm a realistic timeline after reviewing your exact needs.'
     },
     {
       question: 'Do I need a Computer or Special Software?',
-      answer: 'No. If you can send a WhatsApp message, you can use GoAutomatic. Everything works on your phone and runs in the cloud.'
+      answer: 'No. Everything works on your smartphone. You just need a modern phone with internet access.'
     },
     {
       question: 'What if my staff don\'t know how to use it?',
-      answer: 'We train your team in under 30 minutes. After that, the system runs itself and your staff check a simple daily summary.'
+      answer: 'We provide a short training session that covers everything. Our systems are designed to be simple and intuitive and your staff get to check a simple daily summary.'
     },
     {
       question: 'Is my client data safe?',
-      answer: 'Yes. Encrypted tools, access control, Kenya Data Protection Act and GDPR compliant. If your business handles sensitive information, we set it up with an extra layer of security.'
+      answer: 'Yes. Encrypted tools, access control, Kenya Data Protection Act and GDPR compliant. Your data is encrypted, access-controlled, and stored safely.'
     }
   ];
 
@@ -125,7 +125,7 @@ function LandingPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="font-serif text-5xl md:text-6xl text-charcoal mb-8 leading-tight">
               From <span className="text-gold">Manual Work</span> <span className="text-charcoal">→ </span>
-              <span className="text-gold">Automatic</span>
+              <span className="text-gold">Automatic Growth</span>
             </h1>
 
             <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -210,7 +210,7 @@ function LandingPage() {
                   <div>
                     <h3 className="font-serif text-2xl text-charcoal mb-2">AI Customer Reply System</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Your business gets an AI trained on your products and FAQs. It replies to every WhatsApp, Instagram DM, and email instantly, 24/7.
+                      Your business gets an AI trained on your products and FAQs. It replies to every WhatsApp, Telegram, Instagram, TikTok, Twitter (X), Facebook, Snapchat, Youtube and Email.
                     </p>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ function LandingPage() {
                   <div>
                     <h3 className="font-serif text-2xl text-charcoal mb-2">Daily Content Automation</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Content written, designed, and posted to Instagram, TikTok, Twitter (X), Facebook, Snapchat and Youtube every single day. 30+ pieces per month. You do nothing.
+                      Content written, designed, and posted to WhatsApp, Telegram, Instagram, TikTok, Twitter (X), Facebook, Snapchat, Youtube and even Email every single day. 30+ pieces per month. You do nothing.
                     </p>
                   </div>
                 </div>
@@ -240,7 +240,7 @@ function LandingPage() {
                   <div>
                     <h3 className="font-serif text-2xl text-charcoal mb-2">Short Training so you can run it yourself</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      We train your team in under 30 minutes. After that, everything runs itself and your team checks a daily summary.
+                      We provide a short training session that covers everything. After that, everything runs itself and your team checks a daily summary.
                     </p>
                   </div>
                 </div>
@@ -267,7 +267,7 @@ function LandingPage() {
                 <h3 className="font-serif text-4xl text-gold mb-4">1</h3>
                 <h4 className="font-serif text-2xl text-charcoal mb-3">Book Appointment</h4>
                 <p className="text-gray-600 leading-relaxed">
-                  Quick consultation to understand your needs
+                  Quick consultations booked to understand your needs
                 </p>
               </div>
 
@@ -278,7 +278,7 @@ function LandingPage() {
                 <h3 className="font-serif text-4xl text-gold mb-4">2</h3>
                 <h4 className="font-serif text-2xl text-charcoal mb-3">We build your system</h4>
                 <p className="text-gray-600 leading-relaxed">
-                  Custom designed for your business in 7-10 days
+                  Custom designed for your business
                 </p>
               </div>
 
@@ -331,7 +331,7 @@ function LandingPage() {
             </h2>
 
             <p className="text-lg text-charcoal mb-12">
-              Submit your details and forms below, then choose a booking time.
+              Submit your Details and Businesses/Tasks below, then choose a booking time to start your Automatic Growth.
             </p>
 
             <div className="bg-white rounded-3xl border-2 border-gold p-8 md:p-12 shadow-sm">
@@ -441,10 +441,24 @@ function LandingPage() {
 
             <div className="flex flex-col gap-4 text-left">
               <p className="text-charcoal text-lg">
-                <span className="font-medium text-gold">WhatsApp:</span> <span className="text-gold">+254751772123</span>
+                <span className="font-medium text-gold">WhatsApp:</span>{' '}
+                <a
+                  href={WHATSAPP_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gold hover:underline transition-all"
+                >
+                  +254751772123
+                </a>
               </p>
               <p className="text-charcoal text-lg">
-                <span className="font-medium text-gold">Email:</span> <span className="text-gold">salminabdalla93@gmail.com</span>
+                <span className="font-medium text-gold">Email:</span>{' '}
+                <a
+                  href="mailto:salminabdalla93@gmail.com"
+                  className="text-gold hover:underline transition-all"
+                >
+                  salminabdalla93@gmail.com
+                </a>
               </p>
             </div>
           </div>
