@@ -3,6 +3,22 @@ import { useEffect, useState } from 'react';
 
 const WHATSAPP_LINK = "https://wa.me/254751772123?text=Hi%20NAIM%20Agency%2C%20I%20want%20to%20automate%20my%20business.";
 
+declare global {
+  interface Window {
+    google: {
+      translate: {
+        TranslateElement: {
+          new(config: unknown, elementId: string): void;
+          InlineLayout: {
+            SIMPLE: number;
+          };
+        };
+      };
+    };
+    googleTranslateElementInit: () => void;
+  }
+}
+
 function AccordionItem({ question, answer, isOpen, onToggle }: { question: string; answer: string; isOpen: boolean; onToggle: () => void }) {
   return (
     <div className={`border rounded-xl transition-all duration-300 ${isOpen ? 'border-gold bg-white' : 'border-gray-200 bg-white'}`}>
@@ -29,6 +45,7 @@ function LandingPage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(1);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [isTranslateReady, setIsTranslateReady] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,86 +72,194 @@ function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    window.googleTranslateElementInit = () => {
+      if (window.google && window.google.translate) {
+        new window.google.translate.TranslateElement(
+          {
+            pageLanguage: 'en',
+            includedLanguages: 'af,sq,am,ar,hy,az,eu,be,bn,bs,bg,ca,zh-CN,zh-TW,co,hr,cs,da,nl,en,eo,et,fi,fr,fy,gl,ka,de,el,gu,ht,ha,haw,he,hi,hu,is,ig,id,ga,it,ja,jv,kn,kk,km,rw,ko,ku,ky,lo,la,lv,lt,lb,mk,mg,ms,ml,mt,mi,mr,mn,my,ne,no,ny,or,ps,fa,pl,pt,pa,ro,ru,sm,gd,sr,st,sn,sd,si,sk,sl,so,es,su,sw,sv,tl,tg,ta,tt,te,th,tr,tk,uk,ur,ug,uz,vi,cy,xh,yi,yo,zu',
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+          },
+          'google_translate_element'
+        );
+        setIsTranslateReady(true);
+      }
+    };
+
+    const checkInterval = setInterval(() => {
+      if (window.google && window.google.translate) {
+        window.googleTranslateElementInit();
+        clearInterval(checkInterval);
+      }
+    }, 100);
+
+    setTimeout(() => clearInterval(checkInterval), 10000);
+
+    return () => clearInterval(checkInterval);
+  }, []);
+
   const languages = [
     { code: 'en', name: 'English' },
-    { code: 'es', name: 'Español (Spanish)' },
-    { code: 'fr', name: 'Français (French)' },
-    { code: 'de', name: 'Deutsch (German)' },
-    { code: 'it', name: 'Italiano (Italian)' },
-    { code: 'pt', name: 'Português (Portuguese)' },
-    { code: 'ru', name: 'Русский (Russian)' },
-    { code: 'ja', name: '日本語 (Japanese)' },
+    { code: 'af', name: 'Afrikaans' },
+    { code: 'sq', name: 'Shqip (Albanian)' },
+    { code: 'am', name: 'አማርኛ (Amharic)' },
+    { code: 'ar', name: 'العربية (Arabic)' },
+    { code: 'hy', name: 'Հայերեն (Armenian)' },
+    { code: 'az', name: 'Azərbaycan (Azerbaijani)' },
+    { code: 'eu', name: 'Euskara (Basque)' },
+    { code: 'be', name: 'Беларуская (Belarusian)' },
+    { code: 'bn', name: 'বাংলা (Bengali)' },
+    { code: 'bs', name: 'Bosanski (Bosnian)' },
+    { code: 'bg', name: 'Български (Bulgarian)' },
+    { code: 'ca', name: 'Català (Catalan)' },
     { code: 'zh-CN', name: '中文简体 (Chinese Simplified)' },
     { code: 'zh-TW', name: '中文繁體 (Chinese Traditional)' },
-    { code: 'ko', name: '한국어 (Korean)' },
-    { code: 'ar', name: 'العربية (Arabic)' },
-    { code: 'hi', name: 'हिन्दी (Hindi)' },
-    { code: 'sw', name: 'Kiswahili (Swahili)' },
-    { code: 'yo', name: 'Yorùbá (Yoruba)' },
-    { code: 'ha', name: 'Hausa' },
-    { code: 'am', name: 'አማርኛ (Amharic)' },
-    { code: 'so', name: 'Soomaali (Somali)' },
-    { code: 'zu', name: 'isiZulu' },
-    { code: 'xh', name: 'isiXhosa' },
-    { code: 'nl', name: 'Nederlands (Dutch)' },
-    { code: 'pl', name: 'Polski (Polish)' },
-    { code: 'tr', name: 'Türkçe (Turkish)' },
-    { code: 'el', name: 'Ελληνικά (Greek)' },
-    { code: 'sv', name: 'Svenska (Swedish)' },
-    { code: 'no', name: 'Norsk (Norwegian)' },
-    { code: 'da', name: 'Dansk (Danish)' },
-    { code: 'fi', name: 'Suomi (Finnish)' },
+    { code: 'co', name: 'Corsu (Corsican)' },
+    { code: 'hr', name: 'Hrvatski (Croatian)' },
     { code: 'cs', name: 'Čeština (Czech)' },
-    { code: 'hu', name: 'Magyar (Hungarian)' },
-    { code: 'ro', name: 'Română (Romanian)' },
-    { code: 'uk', name: 'Українська (Ukrainian)' },
+    { code: 'da', name: 'Dansk (Danish)' },
+    { code: 'nl', name: 'Nederlands (Dutch)' },
+    { code: 'eo', name: 'Esperanto' },
+    { code: 'et', name: 'Eesti (Estonian)' },
+    { code: 'fi', name: 'Suomi (Finnish)' },
+    { code: 'fr', name: 'Français (French)' },
+    { code: 'fy', name: 'Frysk (Frisian)' },
+    { code: 'gl', name: 'Galego (Galician)' },
+    { code: 'ka', name: 'ქართული (Georgian)' },
+    { code: 'de', name: 'Deutsch (German)' },
+    { code: 'el', name: 'Ελληνικά (Greek)' },
+    { code: 'gu', name: 'ગુજરાતી (Gujarati)' },
+    { code: 'ht', name: 'Kreyòl Ayisyen (Haitian Creole)' },
+    { code: 'ha', name: 'Hausa' },
+    { code: 'haw', name: 'ʻŌlelo Hawaiʻi (Hawaiian)' },
     { code: 'he', name: 'עברית (Hebrew)' },
-    { code: 'th', name: 'ไทย (Thai)' },
-    { code: 'vi', name: 'Tiếng Việt (Vietnamese)' },
-    { code: 'id', name: 'Bahasa Indonesia' },
-    { code: 'tl', name: 'Tagalog (Filipino)' },
-    { code: 'bn', name: 'বাংলা (Bengali)' },
-    { code: 'ur', name: 'اردو (Urdu)' },
+    { code: 'hi', name: 'हिन्दी (Hindi)' },
+    { code: 'hu', name: 'Magyar (Hungarian)' },
+    { code: 'is', name: 'Íslenska (Icelandic)' },
+    { code: 'ig', name: 'Igbo' },
+    { code: 'id', name: 'Bahasa Indonesia (Indonesian)' },
+    { code: 'ga', name: 'Gaeilge (Irish)' },
+    { code: 'it', name: 'Italiano (Italian)' },
+    { code: 'ja', name: '日本語 (Japanese)' },
+    { code: 'jv', name: 'Basa Jawa (Javanese)' },
+    { code: 'kn', name: 'ಕನ್ನಡ (Kannada)' },
+    { code: 'kk', name: 'Қазақ (Kazakh)' },
+    { code: 'km', name: 'ខ្មែរ (Khmer)' },
+    { code: 'rw', name: 'Kinyarwanda' },
+    { code: 'ko', name: '한국어 (Korean)' },
+    { code: 'ku', name: 'Kurdî (Kurdish)' },
+    { code: 'ky', name: 'Кыргызча (Kyrgyz)' },
+    { code: 'lo', name: 'ລາວ (Lao)' },
+    { code: 'la', name: 'Latina (Latin)' },
+    { code: 'lv', name: 'Latviešu (Latvian)' },
+    { code: 'lt', name: 'Lietuvių (Lithuanian)' },
+    { code: 'lb', name: 'Lëtzebuergesch (Luxembourgish)' },
+    { code: 'mk', name: 'Македонски (Macedonian)' },
+    { code: 'mg', name: 'Malagasy' },
+    { code: 'ms', name: 'Bahasa Melayu (Malay)' },
+    { code: 'ml', name: 'മലയാളം (Malayalam)' },
+    { code: 'mt', name: 'Malti (Maltese)' },
+    { code: 'mi', name: 'Māori' },
+    { code: 'mr', name: 'मराठी (Marathi)' },
+    { code: 'mn', name: 'Монгол (Mongolian)' },
+    { code: 'my', name: 'မြန်မာ (Myanmar/Burmese)' },
+    { code: 'ne', name: 'नेपाली (Nepali)' },
+    { code: 'no', name: 'Norsk (Norwegian)' },
+    { code: 'ny', name: 'Chichewa (Nyanja)' },
+    { code: 'or', name: 'ଓଡ଼ିଆ (Odia)' },
+    { code: 'ps', name: 'پښتو (Pashto)' },
+    { code: 'fa', name: 'فارسی (Persian)' },
+    { code: 'pl', name: 'Polski (Polish)' },
+    { code: 'pt', name: 'Português (Portuguese)' },
     { code: 'pa', name: 'ਪੰਜਾਬੀ (Punjabi)' },
+    { code: 'ro', name: 'Română (Romanian)' },
+    { code: 'ru', name: 'Русский (Russian)' },
+    { code: 'sm', name: 'Gagana Samoa (Samoan)' },
+    { code: 'gd', name: 'Gàidhlig (Scots Gaelic)' },
+    { code: 'sr', name: 'Српски (Serbian)' },
+    { code: 'st', name: 'Sesotho (Southern Sotho)' },
+    { code: 'sn', name: 'chiShona (Shona)' },
+    { code: 'sd', name: 'سنڌي (Sindhi)' },
+    { code: 'si', name: 'සිංහල (Sinhala)' },
+    { code: 'sk', name: 'Slovenčina (Slovak)' },
+    { code: 'sl', name: 'Slovenščina (Slovenian)' },
+    { code: 'so', name: 'Soomaali (Somali)' },
+    { code: 'es', name: 'Español (Spanish)' },
+    { code: 'su', name: 'Basa Sunda (Sundanese)' },
+    { code: 'sw', name: 'Kiswahili (Swahili)' },
+    { code: 'sv', name: 'Svenska (Swedish)' },
+    { code: 'tl', name: 'Tagalog (Filipino)' },
+    { code: 'tg', name: 'Тоҷикӣ (Tajik)' },
+    { code: 'ta', name: 'தமிழ் (Tamil)' },
+    { code: 'tt', name: 'Татарча (Tatar)' },
+    { code: 'te', name: 'తెలుగు (Telugu)' },
+    { code: 'th', name: 'ไทย (Thai)' },
+    { code: 'tr', name: 'Türkçe (Turkish)' },
+    { code: 'tk', name: 'Türkmen (Turkmen)' },
+    { code: 'uk', name: 'Українська (Ukrainian)' },
+    { code: 'ur', name: 'اردو (Urdu)' },
+    { code: 'ug', name: 'ئۇيغۇرچە (Uyghur)' },
+    { code: 'uz', name: 'Oʻzbek (Uzbek)' },
+    { code: 'vi', name: 'Tiếng Việt (Vietnamese)' },
+    { code: 'cy', name: 'Cymraeg (Welsh)' },
+    { code: 'xh', name: 'isiXhosa (Xhosa)' },
+    { code: 'yi', name: 'ייִדיש (Yiddish)' },
+    { code: 'yo', name: 'Yorùbá (Yoruba)' },
+    { code: 'zu', name: 'isiZulu (Zulu)' },
   ];
 
   const handleLanguageChange = (languageCode: string) => {
-    const element = document.querySelector('html');
-    if (element) {
-      element.setAttribute('lang', languageCode);
-    }
-
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.innerHTML = `
-      function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-          pageLanguage: 'en',
-          includedLanguages: 'af,sq,am,ar,hy,az,eu,be,bn,bs,bg,ca,zh-CN,zh-TW,co,hr,cs,da,nl,en,eo,et,fi,fr,fy,gl,ka,de,el,gu,ht,ha,haw,he,hi,hu,is,ig,id,ga,it,ja,jv,kn,kk,km,rw,ko,ku,ky,lo,la,lv,lt,lb,mk,mg,ms,ml,mt,mi,mr,mn,my,ne,no,ny,or,ps,fa,pl,pt,pa,ro,ru,sm,gd,sr,st,sn,sd,si,sk,sl,so,es,su,sw,sv,tl,tg,ta,tt,te,th,tr,tk,uk,ur,ug,uz,vi,cy,xh,yi,yo,zu',
-          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-          autoDisplay: false
-        }, 'google_translate_element');
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', googleTranslateElementInit);
-      } else {
-        googleTranslateElementInit();
-      }
-    `;
-    document.body.appendChild(script);
-
-    if (languageCode !== 'en') {
-      setTimeout(() => {
-        const combobox = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
-        if (combobox) {
-          combobox.value = languageCode;
-          combobox.dispatchEvent(new Event('change'));
-        }
-      }, 500);
-    }
-
     setShowLanguageMenu(false);
+
+    const setCookie = (name: string, value: string, days: number) => {
+      const expires = new Date();
+      expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+      document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+    };
+
+    const triggerTranslation = () => {
+      const selectElement = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+
+      if (selectElement) {
+        if (languageCode === 'en') {
+          selectElement.value = '';
+          setCookie('googtrans', '/en/en', 1);
+          setCookie('googtrans', '', -1);
+          window.location.reload();
+        } else {
+          selectElement.value = languageCode;
+          setCookie('googtrans', `/en/${languageCode}`, 1);
+          selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+
+          setTimeout(() => {
+            const frame = document.querySelector('iframe.goog-te-menu-frame') as HTMLIFrameElement;
+            if (frame && frame.contentDocument) {
+              const frameSelect = frame.contentDocument.querySelector('select.goog-te-combo') as HTMLSelectElement;
+              if (frameSelect) {
+                frameSelect.value = languageCode;
+                frameSelect.dispatchEvent(new Event('change', { bubbles: true }));
+              }
+            }
+          }, 100);
+        }
+      }
+    };
+
+    if (isTranslateReady) {
+      triggerTranslation();
+    } else {
+      const checkReady = setInterval(() => {
+        const selectElement = document.querySelector('select.goog-te-combo');
+        if (selectElement) {
+          clearInterval(checkReady);
+          triggerTranslation();
+        }
+      }, 100);
+
+      setTimeout(() => clearInterval(checkReady), 5000);
+    }
   };
 
   useEffect(() => {
