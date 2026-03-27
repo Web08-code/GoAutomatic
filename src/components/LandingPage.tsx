@@ -1,4 +1,4 @@
-import { MessageCircle, Phone, FileText, Clipboard, GraduationCap, Shield, ChevronDown, Globe } from 'lucide-react';
+import { MessageCircle, Phone, FileText, Clipboard, GraduationCap, Shield, ChevronDown, Globe, Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const WHATSAPP_LINK = "https://wa.me/254751772123?text=Hi%20NAIM%20Agency%2C%20I%20want%20to%20automate%20my%20business.";
@@ -19,21 +19,21 @@ declare global {
   }
 }
 
-function AccordionItem({ question, answer, isOpen, onToggle }: { question: string; answer: string; isOpen: boolean; onToggle: () => void }) {
+function AccordionItem({ question, answer, isOpen, onToggle, isDarkMode }: { question: string; answer: string; isOpen: boolean; onToggle: () => void; isDarkMode: boolean }) {
   return (
-    <div className={`border rounded-xl transition-all duration-300 ${isOpen ? 'border-gold bg-white' : 'border-gray-200 bg-white'}`}>
+    <div className={`border rounded-xl transition-all duration-300 ${isOpen ? `border-gold ${isDarkMode ? 'bg-slate-800' : 'bg-white'}` : `${isDarkMode ? 'border-slate-700 bg-slate-900' : 'border-gray-200 bg-white'}`}`}>
       <button
         onClick={onToggle}
-        className="w-full px-8 py-5 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+        className={`w-full px-8 py-5 text-left flex items-center justify-between transition-colors ${isDarkMode ? 'hover:bg-slate-700' : 'hover:bg-gray-50'}`}
       >
-        <span className={`font-medium text-lg ${isOpen ? 'text-gold' : 'text-charcoal'}`}>{question}</span>
+        <span className={`font-medium text-lg ${isOpen ? 'text-gold' : isDarkMode ? 'text-white' : 'text-charcoal'}`}>{question}</span>
         <ChevronDown
           size={24}
           className={`text-gold transition-transform duration-300 ${isOpen ? 'transform rotate-180' : ''}`}
         />
       </button>
       {isOpen && (
-        <div className="px-8 py-5 border-t border-gray-100 text-charcoal leading-relaxed">
+        <div className={`px-8 py-5 border-t ${isDarkMode ? 'border-slate-700 text-slate-100' : 'border-gray-100 text-charcoal'} leading-relaxed`}>
           {answer}
         </div>
       )}
@@ -46,6 +46,24 @@ function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [isTranslateReady, setIsTranslateReady] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setIsDarkMode(savedDarkMode);
+    if (savedDarkMode) {
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', isDarkMode.toString());
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -301,8 +319,8 @@ function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white ${isScrolled ? 'border-b border-gray-100 shadow-sm' : 'border-b border-gray-100'}`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isDarkMode ? 'bg-slate-900 border-slate-700' : 'bg-white border-gray-100'} ${isScrolled ? 'shadow-sm' : ''} border-b`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex-shrink-0">
@@ -317,26 +335,34 @@ function LandingPage() {
               <span className="text-gold">Automatic</span>
             </div>
             <div className="hidden md:flex items-center gap-6">
-              <a href="#contact" className="text-charcoal hover:text-gold transition-colors">
+              <a href="#contact" className={`${isDarkMode ? 'text-slate-100' : 'text-charcoal'} hover:text-gold transition-colors`}>
                 Contact
               </a>
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`${isDarkMode ? 'text-slate-100' : 'text-charcoal'} hover:text-gold transition-colors p-2`}
+                aria-label="Toggle Dark Mode"
+                title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+              >
+                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+              </button>
               <div className="relative language-selector">
                 <button
                   onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-                  className="text-charcoal hover:text-gold transition-colors p-2 flex items-center gap-1"
+                  className={`${isDarkMode ? 'text-slate-100' : 'text-charcoal'} hover:text-gold transition-colors p-2 flex items-center gap-1`}
                   aria-label="Change Language"
                   title="Translate Page"
                 >
                   <Globe size={20} />
                 </button>
                 {showLanguageMenu && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white border border-gold rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+                  <div className={`absolute right-0 mt-2 w-64 ${isDarkMode ? 'bg-slate-800 border-slate-600' : 'bg-white border-gold'} border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto`}>
                     <div className="p-2">
                       {languages.map((lang) => (
                         <button
                           key={lang.code}
                           onClick={() => handleLanguageChange(lang.code)}
-                          className="w-full text-left px-4 py-3 hover:bg-gold-tint text-charcoal hover:text-gold transition-colors text-sm border-b border-gray-100 last:border-0"
+                          className={`w-full text-left px-4 py-3 transition-colors text-sm border-b ${isDarkMode ? 'text-slate-100 hover:bg-slate-700 hover:text-gold border-slate-700' : 'text-charcoal hover:bg-gold-tint hover:text-gold border-gray-100'} last:border-0`}
                         >
                           {lang.name}
                         </button>
@@ -355,23 +381,31 @@ function LandingPage() {
               </a>
             </div>
             <div className="md:hidden flex items-center gap-2">
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`${isDarkMode ? 'text-slate-100' : 'text-charcoal'} hover:text-gold transition-colors p-2`}
+                aria-label="Toggle Dark Mode"
+                title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+              >
+                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
               <div className="relative language-selector">
                 <button
                   onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-                  className="text-charcoal hover:text-gold transition-colors p-2"
+                  className={`${isDarkMode ? 'text-slate-100' : 'text-charcoal'} hover:text-gold transition-colors p-2`}
                   aria-label="Change Language"
                   title="Translate Page"
                 >
                   <Globe size={18} />
                 </button>
                 {showLanguageMenu && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white border border-gold rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+                  <div className={`absolute right-0 mt-2 w-56 ${isDarkMode ? 'bg-slate-800 border-slate-600' : 'bg-white border-gold'} border rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto`}>
                     <div className="p-2">
                       {languages.map((lang) => (
                         <button
                           key={lang.code}
                           onClick={() => handleLanguageChange(lang.code)}
-                          className="w-full text-left px-4 py-3 hover:bg-gold-tint text-charcoal hover:text-gold transition-colors text-sm border-b border-gray-100 last:border-0"
+                          className={`w-full text-left px-4 py-3 transition-colors text-sm border-b ${isDarkMode ? 'text-slate-100 hover:bg-slate-700 hover:text-gold border-slate-700' : 'text-charcoal hover:bg-gold-tint hover:text-gold border-gray-100'} last:border-0`}
                         >
                           {lang.name}
                         </button>
@@ -394,15 +428,15 @@ function LandingPage() {
       </header>
 
       <main className="pt-20">
-        <section className="py-20 md:py-28 px-4 sm:px-6 lg:px-8">
+        <section className={`py-20 md:py-28 px-4 sm:px-6 lg:px-8 ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="font-serif text-5xl md:text-6xl text-charcoal mb-8 leading-tight">
-              From <span className="text-gold">Manual Work</span> <span className="text-charcoal">→ </span>
+            <h1 className={`font-serif text-5xl md:text-6xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-8 leading-tight`}>
+              From <span className="text-gold">Manual Work</span> <span className={isDarkMode ? 'text-white' : 'text-charcoal'}>→ </span>
               <span className="text-gold">Automatic Growth</span>
             </h1>
 
             <div className="grid md:grid-cols-2 gap-8 mb-12">
-              <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm fade-in">
+              <div className={`${isDarkMode ? 'bg-slate-900 border-slate-700' : 'bg-white border-gray-100'} rounded-2xl p-8 border shadow-sm fade-in`}>
                 <div className="aspect-[4/3] w-full rounded-xl mb-6 overflow-hidden">
                   <img
                     src="/20260327_0103_Image_Generation_remix_01kmp2r4sffextkztf38j7qden.png"
@@ -410,11 +444,11 @@ function LandingPage() {
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <h3 className="font-serif text-2xl text-charcoal mb-2">Before</h3>
+                <h3 className={`font-serif text-2xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-2`}>Before</h3>
                 <p className="text-gold">Manual customer work</p>
               </div>
 
-              <div className="bg-white rounded-2xl p-8 border-2 border-gold shadow-sm fade-in">
+              <div className={`${isDarkMode ? 'bg-slate-900 border-gold' : 'bg-white border-gold'} rounded-2xl p-8 border-2 shadow-sm fade-in`}>
                 <div className="aspect-[4/3] w-full rounded-xl mb-6 overflow-hidden">
                   <img
                     src="/20260327_0112_Image_Generation_simple_compose_01kmp38x7pfb193z8nb1gxn98d.png"
@@ -422,12 +456,12 @@ function LandingPage() {
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <h3 className="font-serif text-2xl text-charcoal mb-2">After</h3>
+                <h3 className={`font-serif text-2xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-2`}>After</h3>
                 <p className="text-gold">Automatic replies + content + lead follow-up</p>
               </div>
             </div>
 
-            <p className="text-lg text-gray-600 mb-10">
+            <p className={`text-lg ${isDarkMode ? 'text-slate-300' : 'text-gray-600'} mb-10`}>
               Same business. Less stress. Everything on your phone.
             </p>
 
@@ -446,12 +480,12 @@ function LandingPage() {
           </div>
         </section>
 
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <section className={`py-20 px-4 sm:px-6 lg:px-8 ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
           <div className="max-w-5xl mx-auto">
-            <h2 className="font-serif text-4xl md:text-5xl text-center mb-6 text-charcoal">
+            <h2 className={`font-serif text-4xl md:text-5xl text-center mb-6 ${isDarkMode ? 'text-white' : 'text-charcoal'}`}>
               Turn your manual business work into <span className="text-gold">clean</span> automation
             </h2>
-            <p className="text-center text-charcoal text-lg mb-10 leading-relaxed max-w-3xl mx-auto">
+            <p className={`text-center ${isDarkMode ? 'text-slate-300' : 'text-charcoal'} text-lg mb-10 leading-relaxed max-w-3xl mx-auto`}>
              We help small businesses stop losing time, money, and customers to repetitive daily tasks. We build Automatic systems that reply to customers, post your content, and follow up on every lead — automatically, every single day. without you lifting a finger.
             </p>
 
@@ -470,49 +504,49 @@ function LandingPage() {
           </div>
         </section>
 
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <section className={`py-20 px-4 sm:px-6 lg:px-8 ${isDarkMode ? 'bg-slate-900' : 'bg-gray-50'}`}>
           <div className="max-w-5xl mx-auto">
-            <h2 className="font-serif text-4xl md:text-5xl text-center mb-16 text-charcoal">
+            <h2 className={`font-serif text-4xl md:text-5xl text-center mb-16 ${isDarkMode ? 'text-white' : 'text-charcoal'}`}>
               What <span className="text-gold">You Get</span>
             </h2>
 
-            <div className="bg-white rounded-3xl p-8 md:p-12 border border-gray-100 shadow-sm">
+            <div className={`${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-100'} rounded-3xl p-8 md:p-12 border shadow-sm`}>
               <div className="space-y-8">
-                <div className="flex items-start gap-6 pb-8 border-b border-gray-100 last:pb-0 last:border-0 fade-in">
+                <div className={`flex items-start gap-6 pb-8 border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'} last:pb-0 last:border-0 fade-in`}>
                   <Phone className="text-gold flex-shrink-0" size={32} />
                   <div>
-                    <h3 className="font-serif text-2xl text-charcoal mb-2">AI Customer Reply System</h3>
-                    <p className="text-gray-600 leading-relaxed">
+                    <h3 className={`font-serif text-2xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-2`}>AI Customer Reply System</h3>
+                    <p className={isDarkMode ? 'text-slate-300' : 'text-gray-600'} >
                       Your business gets an AI trained on your products and FAQs. It replies to every WhatsApp, Telegram, Instagram, TikTok, Twitter (X), Facebook, Snapchat, Youtube and Email.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-6 pb-8 border-b border-gray-100 last:pb-0 last:border-0 fade-in">
+                <div className={`flex items-start gap-6 pb-8 border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'} last:pb-0 last:border-0 fade-in`}>
                   <FileText className="text-gold flex-shrink-0" size={32} />
                   <div>
-                    <h3 className="font-serif text-2xl text-charcoal mb-2">Daily Content Automation</h3>
-                    <p className="text-gray-600 leading-relaxed">
+                    <h3 className={`font-serif text-2xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-2`}>Daily Content Automation</h3>
+                    <p className={isDarkMode ? 'text-slate-300' : 'text-gray-600'}>
                       Content written, designed, and posted to WhatsApp, Telegram, Instagram, TikTok, Twitter (X), Facebook, Snapchat, Youtube and even Email every single day. 30+ pieces per month. You do nothing.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-6 pb-8 border-b border-gray-100 last:pb-0 last:border-0 fade-in">
+                <div className={`flex items-start gap-6 pb-8 border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'} last:pb-0 last:border-0 fade-in`}>
                   <Clipboard className="text-gold flex-shrink-0" size={32} />
                   <div>
-                    <h3 className="font-serif text-2xl text-charcoal mb-2">Automated Lead Follow-Up</h3>
-                    <p className="text-gray-600 leading-relaxed">
+                    <h3 className={`font-serif text-2xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-2`}>Automated Lead Follow-Up</h3>
+                    <p className={isDarkMode ? 'text-slate-300' : 'text-gray-600'}>
                       Every lead gets a message within 3 minutes. Then again after 2 days. Then after 7 days. Automatically. No lead slips through.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-6 pb-8 border-b border-gray-100 last:pb-0 last:border-0 fade-in">
+                <div className={`flex items-start gap-6 pb-8 border-b ${isDarkMode ? 'border-slate-700' : 'border-gray-100'} last:pb-0 last:border-0 fade-in`}>
                   <GraduationCap className="text-gold flex-shrink-0" size={32} />
                   <div>
-                    <h3 className="font-serif text-2xl text-charcoal mb-2">Short Training so you can run it yourself</h3>
-                    <p className="text-gray-600 leading-relaxed">
+                    <h3 className={`font-serif text-2xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-2`}>Short Training so you can run it yourself</h3>
+                    <p className={isDarkMode ? 'text-slate-300' : 'text-gray-600'}>
                       We provide a short training session that covers everything. After that, everything runs itself and your team checks a daily summary.
                     </p>
                   </div>
@@ -520,66 +554,66 @@ function LandingPage() {
               </div>
             </div>
 
-            <p className="text-center text-sm text-gray-500 mt-8">
+            <p className={`text-center text-sm ${isDarkMode ? 'text-slate-400' : 'text-gray-500'} mt-8`}>
               Optional Add-Ons: Reminders · Follow-ups · Google Sheets Sync
             </p>
           </div>
         </section>
 
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <section className={`py-20 px-4 sm:px-6 lg:px-8 ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
           <div className="max-w-5xl mx-auto">
-            <h2 className="font-serif text-4xl md:text-5xl text-center mb-16 text-charcoal">
+            <h2 className={`font-serif text-4xl md:text-5xl text-center mb-16 ${isDarkMode ? 'text-white' : 'text-charcoal'}`}>
               How It <span className="text-gold">Works</span>
             </h2>
 
             <div className="grid md:grid-cols-3 gap-12 mb-16">
               <div className="text-center fade-in">
-                <div className="w-24 h-24 bg-gold-tint rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className={`w-24 h-24 ${isDarkMode ? 'bg-slate-800' : 'bg-gold-tint'} rounded-full flex items-center justify-center mx-auto mb-6`}>
                   <Phone className="text-gold" size={48} />
                 </div>
                 <h3 className="font-serif text-4xl text-gold mb-4">1</h3>
-                <h4 className="font-serif text-2xl text-charcoal mb-3">Book Appointment</h4>
-                <p className="text-gray-600 leading-relaxed">
+                <h4 className={`font-serif text-2xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-3`}>Book Appointment</h4>
+                <p className={isDarkMode ? 'text-slate-300' : 'text-gray-600'}>
                   Quick consultations booked to understand your needs
                 </p>
               </div>
 
               <div className="text-center fade-in">
-                <div className="w-24 h-24 bg-gold-tint rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className={`w-24 h-24 ${isDarkMode ? 'bg-slate-800' : 'bg-gold-tint'} rounded-full flex items-center justify-center mx-auto mb-6`}>
                   <FileText className="text-gold" size={48} />
                 </div>
                 <h3 className="font-serif text-4xl text-gold mb-4">2</h3>
-                <h4 className="font-serif text-2xl text-charcoal mb-3">We build your system</h4>
-                <p className="text-gray-600 leading-relaxed">
+                <h4 className={`font-serif text-2xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-3`}>We build your system</h4>
+                <p className={isDarkMode ? 'text-slate-300' : 'text-gray-600'}>
                   Custom designed for your business
                 </p>
               </div>
 
               <div className="text-center fade-in">
-                <div className="w-24 h-24 bg-gold-tint rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className={`w-24 h-24 ${isDarkMode ? 'bg-slate-800' : 'bg-gold-tint'} rounded-full flex items-center justify-center mx-auto mb-6`}>
                   <Clipboard className="text-gold" size={48} />
                 </div>
                 <h3 className="font-serif text-4xl text-gold mb-4">3</h3>
-                <h4 className="font-serif text-2xl text-charcoal mb-3">You go automatic</h4>
-                <p className="text-gray-600 leading-relaxed">
+                <h4 className={`font-serif text-2xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-3`}>You go automatic</h4>
+                <p className={isDarkMode ? 'text-slate-300' : 'text-gray-600'}>
                   Start using it with confidence
                 </p>
               </div>
             </div>
 
-            <div className="bg-gold-tint rounded-3xl p-8 md:p-12 border border-gold fade-in">
+            <div className={`${isDarkMode ? 'bg-slate-800 border-slate-600' : 'bg-gold-tint border-gold'} rounded-3xl p-8 md:p-12 border fade-in`}>
               <Shield className="text-gold mx-auto mb-4" size={40} />
-              <h3 className="font-serif text-3xl text-charcoal text-center mb-4">Your Data is Protected</h3>
-              <p className="text-gray-600 text-center leading-relaxed max-w-3xl mx-auto">
+              <h3 className={`font-serif text-3xl ${isDarkMode ? 'text-white' : 'text-charcoal'} text-center mb-4`}>Your Data is Protected</h3>
+              <p className={`text-center leading-relaxed max-w-3xl mx-auto ${isDarkMode ? 'text-slate-300' : 'text-gray-600'}`}>
                 Encrypted tools, access control, Kenya Data Protection Act and GDPR compliant. Your clients' data stays safe.
               </p>
             </div>
           </div>
         </section>
 
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <section className={`py-20 px-4 sm:px-6 lg:px-8 ${isDarkMode ? 'bg-slate-900' : 'bg-gray-50'}`}>
           <div className="max-w-5xl mx-auto">
-            <h2 className="font-serif text-4xl md:text-5xl text-center mb-16 text-charcoal">
+            <h2 className={`font-serif text-4xl md:text-5xl text-center mb-16 ${isDarkMode ? 'text-white' : 'text-charcoal'}`}>
               Common <span className="text-gold">Questions</span>
             </h2>
 
@@ -591,95 +625,96 @@ function LandingPage() {
                   answer={faq.answer}
                   isOpen={openFAQ === index}
                   onToggle={() => setOpenFAQ(openFAQ === index ? null : index)}
+                  isDarkMode={isDarkMode}
                 />
               ))}
             </div>
           </div>
         </section>
 
-        <section id="contact" className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
+        <section id="contact" className={`py-24 px-4 sm:px-6 lg:px-8 ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="font-serif text-4xl md:text-5xl text-charcoal mb-6">
+            <h2 className={`font-serif text-4xl md:text-5xl ${isDarkMode ? 'text-white' : 'text-charcoal'} mb-6`}>
               Let's <span className="text-gold">Go Automatic</span>
             </h2>
 
-            <p className="text-lg text-charcoal mb-12">
+            <p className={`text-lg ${isDarkMode ? 'text-slate-300' : 'text-charcoal'} mb-12`}>
               Submit your Details and Businesses/Tasks below, then choose a booking time to start your Automatic Growth.
             </p>
 
-            <div className="bg-white rounded-3xl border-2 border-gold p-8 md:p-12 shadow-sm">
+            <div className={`${isDarkMode ? 'bg-slate-900 border-slate-600' : 'bg-white border-gold'} rounded-3xl border-2 p-8 md:p-12 shadow-sm`}>
               <form className="space-y-6">
                 <div>
-                  <label className="block text-left text-charcoal font-medium mb-3">
+                  <label className={`block text-left ${isDarkMode ? 'text-white' : 'text-charcoal'} font-medium mb-3`}>
                     Full Name <span className="text-gold">*</span>
                   </label>
                   <input
                     type="text"
                     placeholder="Full Name"
-                    className="w-full px-6 py-3 border-2 border-gold rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 transition-all text-charcoal placeholder-gray-400"
+                    className={`w-full px-6 py-3 border-2 border-gold rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 transition-all ${isDarkMode ? 'bg-slate-800 text-white placeholder-slate-500' : 'bg-white text-charcoal placeholder-gray-400'}`}
                     required
                   />
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-left text-charcoal font-medium mb-3">
+                    <label className={`block text-left ${isDarkMode ? 'text-white' : 'text-charcoal'} font-medium mb-3`}>
                       Email <span className="text-gold">*</span>
                     </label>
                     <input
                       type="email"
                       placeholder="Email"
-                      className="w-full px-6 py-3 border-2 border-gold rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 transition-all text-charcoal placeholder-gray-400"
+                      className={`w-full px-6 py-3 border-2 border-gold rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 transition-all ${isDarkMode ? 'bg-slate-800 text-white placeholder-slate-500' : 'bg-white text-charcoal placeholder-gray-400'}`}
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-left text-charcoal font-medium mb-3">
+                    <label className={`block text-left ${isDarkMode ? 'text-white' : 'text-charcoal'} font-medium mb-3`}>
                       Phone <span className="text-gold">*</span>
                     </label>
                     <input
                       type="tel"
                       placeholder="Phone"
-                      className="w-full px-6 py-3 border-2 border-gold rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 transition-all text-charcoal placeholder-gray-400"
+                      className={`w-full px-6 py-3 border-2 border-gold rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 transition-all ${isDarkMode ? 'bg-slate-800 text-white placeholder-slate-500' : 'bg-white text-charcoal placeholder-gray-400'}`}
                       required
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-left text-charcoal font-medium mb-3">
+                  <label className={`block text-left ${isDarkMode ? 'text-white' : 'text-charcoal'} font-medium mb-3`}>
                     Tell us about your project/Task/Business/Company
                   </label>
                   <textarea
                     placeholder="Tell us what tasks you want to run automatically and How can we help your business, 1. Saving business time 2. Reducing Business Cost 3. Increasing business revenue"
                     rows={5}
-                    className="w-full px-6 py-3 border-2 border-gold rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 transition-all text-charcoal placeholder-gray-400 resize-none"
+                    className={`w-full px-6 py-3 border-2 border-gold rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 transition-all resize-none ${isDarkMode ? 'bg-slate-800 text-white placeholder-slate-500' : 'bg-white text-charcoal placeholder-gray-400'}`}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-left text-charcoal font-medium mb-3">
+                  <label className={`block text-left ${isDarkMode ? 'text-white' : 'text-charcoal'} font-medium mb-3`}>
                     Upload all the tasks you want them to run automatic
                   </label>
-                  <div className="border-2 border-gold rounded-xl p-4 flex items-center gap-4">
+                  <div className={`border-2 border-gold rounded-xl p-4 flex items-center gap-4 ${isDarkMode ? 'bg-slate-800' : 'bg-white'}`}>
                     <button
                       type="button"
                       className="bg-gold text-white px-6 py-2 rounded-full font-medium hover:bg-gold/90 transition-colors whitespace-nowrap"
                     >
                       Choose Files
                     </button>
-                    <span className="text-gray-400">No file chosen</span>
+                    <span className={isDarkMode ? 'text-slate-500' : 'text-gray-400'}>No file chosen</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-left text-charcoal font-medium mb-3">
+                  <label className={`block text-left ${isDarkMode ? 'text-white' : 'text-charcoal'} font-medium mb-3`}>
                     Consultation appointment time slot
                   </label>
-                  <p className="text-left text-gray-600 text-sm mb-3">
+                  <p className={`text-left text-sm mb-3 ${isDarkMode ? 'text-slate-400' : 'text-gray-600'}`}>
                     Please choose a preferred time slot that suits you. We will then contact you to confirm the closest available date.
                   </p>
-                  <select className="w-full px-6 py-3 border-2 border-gold rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 transition-all text-charcoal appearance-none bg-white cursor-pointer">
+                  <select className={`w-full px-6 py-3 border-2 border-gold rounded-xl focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 transition-all appearance-none cursor-pointer ${isDarkMode ? 'bg-slate-800 text-white' : 'bg-white text-charcoal'}`}>
                     <option value="">Select a time slot</option>
                     <option value="9am">9:00 AM - 10:00 AM</option>
                     <option value="10am">10:00 AM - 11:00 AM</option>
@@ -701,7 +736,7 @@ function LandingPage() {
         </section>
       </main>
 
-      <footer className="bg-white border-t border-gray-200">
+      <footer className={`${isDarkMode ? 'bg-slate-900 border-slate-700' : 'bg-white border-gray-200'} border-t`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="flex flex-col md:flex-row items-center justify-center gap-24">
             <div className="flex-shrink-0">
@@ -713,7 +748,7 @@ function LandingPage() {
             </div>
 
             <div className="flex flex-col gap-4 text-left">
-              <p className="text-charcoal text-lg">
+              <p className={isDarkMode ? 'text-slate-100 text-lg' : 'text-charcoal text-lg'}>
                 <span className="font-medium text-gold">WhatsApp:</span>{' '}
                 <a
                   href={WHATSAPP_LINK}
@@ -724,7 +759,7 @@ function LandingPage() {
                   +254751772123
                 </a>
               </p>
-              <p className="text-charcoal text-lg">
+              <p className={isDarkMode ? 'text-slate-100 text-lg' : 'text-charcoal text-lg'}>
                 <span className="font-medium text-gold">Email:</span>{' '}
                 <a
                   href="mailto:salminabdalla93@gmail.com"
@@ -736,8 +771,8 @@ function LandingPage() {
             </div>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-gray-200 text-center">
-            <p className="text-gray-500 text-sm">© 2024 Naim Agency. All rights reserved. Globally World Wide</p>
+          <div className={`mt-16 pt-8 border-t ${isDarkMode ? 'border-slate-700' : 'border-gray-200'} text-center`}>
+            <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-gray-500'}`}>© 2024 Naim Agency. All rights reserved. Globally World Wide</p>
           </div>
         </div>
       </footer>
